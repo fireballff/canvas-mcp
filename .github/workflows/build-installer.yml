@@ -51,8 +51,8 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: installer-${{ matrix.target }}
+          retention-days: 30
           path: |
-            installer/src-tauri/target/${{ matrix.target }}/release/bundle/macos/*.dmg
             installer/src-tauri/target/${{ matrix.target }}/release/bundle/dmg/*.dmg
             installer/src-tauri/target/${{ matrix.target }}/release/bundle/msi/*.msi
             installer/src-tauri/target/${{ matrix.target }}/release/bundle/nsis/*.exe
