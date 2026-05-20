@@ -8,10 +8,14 @@ export async function getAllAssignmentsDue(
   const now = new Date();
   const cutoff = new Date(now.getTime() + hoursAhead * 60 * 60 * 1000);
   const courses = await client.getCourses();
-  const results: AssignmentResult[] = [];
 
-  for (const course of courses) {
-    const assignments = await client.getAssignments(course.id);
+  const allAssignments = await Promise.all(
+    courses.map((course) => client.getAssignments(course.id))
+  );
+
+  const results: AssignmentResult[] = [];
+  for (const [i, assignments] of allAssignments.entries()) {
+    const course = courses[i];
     for (const assignment of assignments) {
       if (!assignment.due_at) continue;
       const dueDate = new Date(assignment.due_at);
