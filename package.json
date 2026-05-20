@@ -8,10 +8,10 @@
   },
   "files": ["dist", "README.md"],
   "exports": {},
-  "author": "",
+  "author": "fireballff",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/fireballff/canvas-mcp"
   },
   "scripts": {
     "build": "tsc",

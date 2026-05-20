@@ -88,7 +88,7 @@ Contributions welcome! Planned for v2:
 - More AI client integrations
 
 ```bash
-git clone https://github.com/your-username/canvas-mcp
+git clone https://github.com/fireballff/canvas-mcp
 cd canvas-mcp
 npm install
 cp .env.example .env   # add your Canvas credentials
