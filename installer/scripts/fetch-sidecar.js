@@ -21,12 +21,19 @@ const NODE_VERSION = "v22.13.1"; // Node.js LTS — update as needed
 mkdirSync(SIDECAR_DIR, { recursive: true });
 mkdirSync(TMP, { recursive: true });
 
-// On Windows, npm is npm.cmd (a batch script, not a bare executable)
-const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+// On Windows, .cmd scripts must be invoked via cmd.exe /c — execFileSync bypasses the shell
+// so npm.cmd can't be called directly. All args remain in the array (no string interpolation).
+function npmExec(args) {
+  if (process.platform === "win32") {
+    execFileSync("cmd.exe", ["/c", "npm.cmd", ...args], { stdio: "inherit" });
+  } else {
+    execFileSync("npm", args, { stdio: "inherit" });
+  }
+}
 
 // --- canvas-mcp index.js ---
 console.log("Fetching @fireballff/canvas-mcp...");
-execFileSync(npmCmd, ["pack", "@fireballff/canvas-mcp", "--pack-destination", TMP], { stdio: "inherit" });
+npmExec(["pack", "@fireballff/canvas-mcp", "--pack-destination", TMP]);
 
 const tarball = readdirSync(TMP)[0];
 execFileSync("tar", ["-xzf", join(TMP, tarball), "-C", TMP], { stdio: "inherit" });
