@@ -1,0 +1,48 @@
+version: 2
+updates:
+  # Root package — canvas-mcp npm package
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      dev-dependencies:
+        patterns: ["*"]
+        dependency-type: "development"
+    open-pull-requests-limit: 5
+
+  # Installer frontend — Tauri + React
+  - package-ecosystem: "npm"
+    directory: "/installer"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      tauri:
+        patterns: ["@tauri-apps/*"]
+      react:
+        patterns: ["react", "react-dom", "@types/react*"]
+      dev-dependencies:
+        patterns: ["*"]
+        dependency-type: "development"
+    open-pull-requests-limit: 5
+
+  # Installer Rust backend
+  - package-ecosystem: "cargo"
+    directory: "/installer/src-tauri"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      tauri:
+        patterns: ["tauri*"]
+    open-pull-requests-limit: 5
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
