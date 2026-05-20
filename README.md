@@ -8,7 +8,7 @@
 [![Build](https://img.shields.io/github/actions/workflow/status/fireballff/canvas-mcp/build-installer.yml?label=installer%20build)](https://github.com/fireballff/canvas-mcp/actions/workflows/build-installer.yml)
 [![License](https://img.shields.io/github/license/fireballff/canvas-mcp)](LICENSE)
 
-Works with Claude, ChatGPT, Gemini, and more.
+Query assignments, grades, announcements, syllabi, and more — works with Claude, ChatGPT, Gemini, and any MCP-compatible AI.
 
 </div>
 
@@ -71,29 +71,110 @@ Then restart your AI client and ask:
 ## Tools
 
 <details>
-<summary><strong>get_all_assignments_due</strong> — all courses</summary>
+<summary><strong>list_courses</strong></summary>
 
-Returns assignments due across all your enrolled courses.
+List all courses you're currently enrolled in.
 
-| Parameter | Type | Default | Description |
-|---|---|---|---|
-| `hours_ahead` | number | 24 | How far ahead to look |
-
-**Try:** "What's due today?" · "Any assignments due in the next 3 hours?"
+**Try:** "What classes am I taking?" · "Show me my courses."
 
 </details>
 
 <details>
-<summary><strong>get_course_assignments_due</strong> — one course</summary>
+<summary><strong>get_all_assignments_due</strong> · <strong>get_course_assignments_due</strong></summary>
 
-Returns assignments due for a specific course.
+Assignments due across all courses, or for one specific course.
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `course_name` | string | required | Course name or code (partial match ok) |
 | `hours_ahead` | number | 24 | How far ahead to look |
+| `course_name` | string | — | Required for the single-course version |
 
-**Try:** "What's due in Physics this week?" · "Any MATH201 assignments due soon?"
+**Try:** "What's due today?" · "What's due in Physics this week?"
+
+</details>
+
+<details>
+<summary><strong>get_grades</strong> · <strong>get_course_grade</strong></summary>
+
+Current grades across all courses, or for one specific course.
+
+**Try:** "What are my grades?" · "What's my grade in Calc?"
+
+</details>
+
+<details>
+<summary><strong>get_missing_assignments</strong></summary>
+
+All assignments that are past due and not submitted.
+
+**Try:** "What am I missing?" · "What haven't I turned in?"
+
+</details>
+
+<details>
+<summary><strong>get_submission</strong></summary>
+
+Your score, grade, and instructor comments for a specific assignment.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `course_name` | string | Course name or partial match |
+| `assignment_name` | string | Assignment name or partial match |
+
+**Try:** "What did I get on the Physics midterm?" · "Any feedback on my essay?"
+
+</details>
+
+<details>
+<summary><strong>get_announcements</strong> · <strong>get_course_announcements</strong></summary>
+
+Recent announcements from all courses, or one specific course.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `days_back` | number | 7 | How far back to look |
+| `course_name` | string | — | Required for the single-course version |
+
+**Try:** "Any new announcements?" · "What did my Bio professor post this week?"
+
+</details>
+
+<details>
+<summary><strong>get_upcoming_events</strong></summary>
+
+Calendar events (exams, office hours, course events) from all courses.
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `days_ahead` | number | 14 | How far ahead to look |
+
+**Try:** "Any exams coming up?" · "What events do I have this week?"
+
+</details>
+
+<details>
+<summary><strong>get_course_syllabus</strong></summary>
+
+The full syllabus for a specific course — great for asking about policies.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `course_name` | string | Course name or partial match |
+
+**Try:** "What's the late policy in Bio?" · "How is my Physics grade calculated?"
+
+</details>
+
+<details>
+<summary><strong>get_course_modules</strong></summary>
+
+The module/topic structure for a specific course.
+
+| Parameter | Type | Description |
+|---|---|---|
+| `course_name` | string | Course name or partial match |
+
+**Try:** "What topics are covered in Calc?" · "What's coming up in week 4?"
 
 </details>
 
