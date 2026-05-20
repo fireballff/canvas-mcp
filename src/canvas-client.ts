@@ -1,4 +1,13 @@
-import type { CanvasCourse, CanvasAssignment } from "./types.js";
+import type {
+  CanvasCourse,
+  CanvasAssignment,
+  CanvasEnrollment,
+  CanvasAnnouncement,
+  CanvasCalendarEvent,
+  CanvasModule,
+  CanvasMissingSubmission,
+  CanvasSubmission,
+} from "./types.js";
 
 export class CanvasClient {
   private baseUrl: string;
@@ -45,6 +54,84 @@ export class CanvasClient {
     return this.fetchAllPages<CanvasAssignment>(
       `${this.baseUrl}/courses/${courseId}/assignments?per_page=100`
     );
+  }
+
+  async getEnrollmentsWithGrades(): Promise<CanvasEnrollment[]> {
+    return this.fetchAllPages<CanvasEnrollment>(
+      `${this.baseUrl}/users/self/enrollments?include[]=grades&state[]=active&per_page=100`
+    );
+  }
+
+  async getMissingSubmissions(): Promise<CanvasMissingSubmission[]> {
+    return this.fetchAllPages<CanvasMissingSubmission>(
+      `${this.baseUrl}/users/self/missing_submissions?per_page=100`
+    );
+  }
+
+  async getAnnouncements(courseIds: number[], daysBack: number): Promise<CanvasAnnouncement[]> {
+    const startDate = new Date(Date.now() - daysBack * 86400_000)
+      .toISOString()
+      .slice(0, 10);
+    const params = new URLSearchParams({ start_date: startDate, per_page: "100" });
+    for (const id of courseIds) params.append("context_codes[]", `course_${id}`);
+    return this.fetchAllPages<CanvasAnnouncement>(
+      `${this.baseUrl}/announcements?${params}`
+    );
+  }
+
+  async getCalendarEvents(courseIds: number[], daysAhead: number): Promise<CanvasCalendarEvent[]> {
+    const startDate = new Date().toISOString().slice(0, 10);
+    const endDate = new Date(Date.now() + daysAhead * 86400_000)
+      .toISOString()
+      .slice(0, 10);
+    const params = new URLSearchParams({
+      type: "event",
+      start_date: startDate,
+      end_date: endDate,
+      per_page: "100",
+    });
+    for (const id of courseIds) params.append("context_codes[]", `course_${id}`);
+    return this.fetchAllPages<CanvasCalendarEvent>(
+      `${this.baseUrl}/calendar_events?${params}`
+    );
+  }
+
+  async getCourseSyllabus(courseId: number): Promise<{ name: string; syllabus_body: string | null }> {
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+      throw new Error(`Invalid course ID: ${courseId}`);
+    }
+    return this.fetchOne<{ name: string; syllabus_body: string | null }>(
+      `${this.baseUrl}/courses/${courseId}?include[]=syllabus_body`
+    );
+  }
+
+  async getCourseModules(courseId: number): Promise<CanvasModule[]> {
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+      throw new Error(`Invalid course ID: ${courseId}`);
+    }
+    return this.fetchAllPages<CanvasModule>(
+      `${this.baseUrl}/courses/${courseId}/modules?include[]=items&per_page=50`
+    );
+  }
+
+  async getSubmission(courseId: number, assignmentId: number): Promise<CanvasSubmission> {
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+      throw new Error(`Invalid course ID: ${courseId}`);
+    }
+    if (!Number.isInteger(assignmentId) || assignmentId <= 0) {
+      throw new Error(`Invalid assignment ID: ${assignmentId}`);
+    }
+    return this.fetchOne<CanvasSubmission>(
+      `${this.baseUrl}/courses/${courseId}/assignments/${assignmentId}/submissions/self?include[]=submission_comments`
+    );
+  }
+
+  private async fetchOne<T>(url: string): Promise<T> {
+    const response = await fetch(url, { headers: this.headers });
+    if (!response.ok) {
+      throw new Error(`Canvas API error ${response.status} ${response.statusText}`);
+    }
+    return response.json() as Promise<T>;
   }
 
   private async fetchAllPages<T>(url: string): Promise<T[]> {
