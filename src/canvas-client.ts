@@ -1,4 +1,3 @@
-import "dotenv/config";
 import type { CanvasCourse, CanvasAssignment } from "./types.js";
 
 export class CanvasClient {
