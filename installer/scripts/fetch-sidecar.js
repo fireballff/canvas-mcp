@@ -21,9 +21,12 @@ const NODE_VERSION = "v22.13.1"; // Node.js LTS — update as needed
 mkdirSync(SIDECAR_DIR, { recursive: true });
 mkdirSync(TMP, { recursive: true });
 
+// On Windows, npm is npm.cmd (a batch script, not a bare executable)
+const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
+
 // --- canvas-mcp index.js ---
 console.log("Fetching @fireballff/canvas-mcp...");
-execFileSync("npm", ["pack", "@fireballff/canvas-mcp", "--pack-destination", TMP], { stdio: "inherit" });
+execFileSync(npmCmd, ["pack", "@fireballff/canvas-mcp", "--pack-destination", TMP], { stdio: "inherit" });
 
 const tarball = readdirSync(TMP)[0];
 execFileSync("tar", ["-xzf", join(TMP, tarball), "-C", TMP], { stdio: "inherit" });
@@ -64,8 +67,8 @@ if (platform === "darwin") {
   rmSync(nodeOut);
   rmSync(join(SIDECAR_DIR, `node-${NODE_VERSION}-darwin-${arch}`), { recursive: true });
 } else {
-  const zipEntry = `node-${NODE_VERSION}-win-${arch}/node.exe`;
-  execFileSync("unzip", ["-o", nodeOut, zipEntry, "-d", SIDECAR_DIR], { stdio: "inherit" });
+  // Windows runners (2019+) ship bsdtar which handles zip files
+  execFileSync("tar", ["-xf", nodeOut, "-C", SIDECAR_DIR], { stdio: "inherit" });
   cpSync(extractedBinPath, join(SIDECAR_DIR, "node.exe"));
   rmSync(nodeOut);
   rmSync(join(SIDECAR_DIR, `node-${NODE_VERSION}-win-${arch}`), { recursive: true });
