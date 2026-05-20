@@ -46,6 +46,9 @@ export class CanvasClient {
       }
 
       const data = (await response.json()) as T[];
+      if (!Array.isArray(data)) {
+        throw new Error(`Canvas API returned unexpected response shape: ${JSON.stringify(data)}`);
+      }
       results.push(...data);
       nextUrl = parseLinkHeader(response.headers.get("link"));
     }

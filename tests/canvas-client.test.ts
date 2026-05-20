@@ -13,9 +13,12 @@ afterEach(() => {
 describe("CanvasClient", () => {
   it("throws if env vars are missing", async () => {
     const originalUrl = process.env.CANVAS_API_URL;
-    delete process.env.CANVAS_API_URL;
-    expect(() => new CanvasClient()).toThrow("CANVAS_API_URL");
-    process.env.CANVAS_API_URL = originalUrl;
+    try {
+      delete process.env.CANVAS_API_URL;
+      expect(() => new CanvasClient()).toThrow("CANVAS_API_URL");
+    } finally {
+      process.env.CANVAS_API_URL = originalUrl;
+    }
   });
 
   it("fetches a single page of courses", async () => {
