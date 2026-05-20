@@ -28,4 +28,7 @@ program
     await startServer();
   });
 
-program.parse();
+program.parseAsync().catch((err: Error) => {
+  process.stderr.write(`Fatal: ${err.message}\n`);
+  process.exit(1);
+});

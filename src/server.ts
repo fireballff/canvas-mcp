@@ -12,6 +12,10 @@ export async function startServer(): Promise<void> {
     { capabilities: { tools: {} } }
   );
 
+  server.onerror = (error) => {
+    process.stderr.write(`MCP server error: ${error.message}\n`);
+  };
+
   server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
