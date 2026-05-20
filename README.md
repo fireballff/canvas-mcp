@@ -20,8 +20,9 @@ The desktop installer bundles everything — no Node.js or terminal needed.
 
 | Platform | Download |
 |---|---|
-| **Mac** (Apple Silicon) | [canvas-mcp-installer_0.1.0_aarch64.dmg](https://github.com/fireballff/canvas-mcp/releases/download/v1.0.0/canvas-mcp-installer_0.1.0_aarch64.dmg) |
-| **Windows** | [canvas-mcp-installer_0.1.0_x64-setup.exe](https://github.com/fireballff/canvas-mcp/releases/download/v1.0.0/canvas-mcp-installer_0.1.0_x64-setup.exe) |
+| **Mac** (Apple Silicon) | [canvas-mcp-installer_0.1.0_aarch64.dmg](https://github.com/fireballff/canvas-mcp/releases/download/v2.0.1/canvas-mcp-installer_0.1.0_aarch64.dmg) |
+| **Windows** (EXE) | [canvas-mcp-installer_0.1.0_x64-setup.exe](https://github.com/fireballff/canvas-mcp/releases/download/v2.0.1/canvas-mcp-installer_0.1.0_x64-setup.exe) |
+| **Windows** (MSI) | [canvas-mcp-installer_0.1.0_x64_en-US.msi](https://github.com/fireballff/canvas-mcp/releases/download/v2.0.1/canvas-mcp-installer_0.1.0_x64_en-US.msi) |
 
 > **Mac:** right-click the app → Open on first launch (one-time Gatekeeper bypass)  
 > **Windows:** if SmartScreen appears, click **More info → Run anyway**
@@ -221,10 +222,7 @@ See [PRIVACY.md](PRIVACY.md) for full details.
 
 ## Contributing
 
-Contributions welcome! Planned for v2:
-- Announcements — `get_all_announcements`, `get_course_announcements`
-- Grades
-- More AI client integrations
+Contributions welcome!
 
 ```bash
 git clone https://github.com/fireballff/canvas-mcp
