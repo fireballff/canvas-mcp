@@ -130,6 +130,14 @@ Returns assignments due for a specific course.
 
 ---
 
+## Privacy
+
+canvas-mcp runs entirely on your machine. Your Canvas data goes directly from your school's Canvas to your AI client — it never touches any server we operate. There is no analytics, telemetry, or data collection of any kind.
+
+See [PRIVACY.md](PRIVACY.md) for full details.
+
+---
+
 ## Contributing
 
 Contributions welcome! Planned for v2:
