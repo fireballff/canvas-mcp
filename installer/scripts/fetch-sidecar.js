@@ -21,11 +21,13 @@ const NODE_VERSION = "v22.13.1"; // Node.js LTS — update as needed
 mkdirSync(SIDECAR_DIR, { recursive: true });
 mkdirSync(TMP, { recursive: true });
 
-// On Windows, .cmd scripts must be invoked via cmd.exe /c — execFileSync bypasses the shell
-// so npm.cmd can't be called directly. All args remain in the array (no string interpolation).
+// npm_execpath is set by npm when it spawns this script via `npm run prepare:sidecar`.
+// Running it via process.execPath avoids any shell invocation on all platforms
+// (no cmd.exe /c needed on Windows, no shell: true needed anywhere).
 function npmExec(args) {
-  if (process.platform === "win32") {
-    execFileSync("cmd.exe", ["/c", "npm.cmd", ...args], { stdio: "inherit" });
+  const npmScript = process.env.npm_execpath;
+  if (npmScript) {
+    execFileSync(process.execPath, [npmScript, ...args], { stdio: "inherit" });
   } else {
     execFileSync("npm", args, { stdio: "inherit" });
   }
