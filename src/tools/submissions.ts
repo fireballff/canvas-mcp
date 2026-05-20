@@ -1,5 +1,6 @@
 import type { CanvasClient } from "../canvas-client.js";
 import type { MissingAssignmentResult, SubmissionResult } from "../types.js";
+import { safeUrl } from "../utils.js";
 
 export async function getMissingAssignments(
   client: CanvasClient
@@ -19,7 +20,7 @@ export async function getMissingAssignments(
       assignmentName: a.name,
       dueAt: a.due_at,
       pointsPossible: a.points_possible,
-      url: a.html_url,
+      url: safeUrl(a.html_url),
     };
   });
 }

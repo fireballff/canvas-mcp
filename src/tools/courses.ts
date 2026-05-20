@@ -1,6 +1,6 @@
 import type { CanvasClient } from "../canvas-client.js";
 import type { ModuleResult } from "../types.js";
-import { stripHtml } from "../utils.js";
+import { stripHtml, safeUrl } from "../utils.js";
 
 export async function listCourses(client: CanvasClient) {
   const courses = await client.getCourses();
@@ -51,7 +51,7 @@ export async function getCourseModules(
     items: (m.items ?? []).map((item) => ({
       title: item.title,
       type: item.type,
-      url: item.html_url ?? null,
+      url: safeUrl(item.html_url),
     })),
   }));
 }

@@ -1,6 +1,6 @@
 import type { CanvasClient } from "../canvas-client.js";
 import type { AnnouncementResult } from "../types.js";
-import { stripHtml } from "../utils.js";
+import { stripHtml, safeUrl } from "../utils.js";
 
 function courseIdFromContextCode(code: string): number {
   return parseInt(code.replace("course_", ""), 10);
@@ -22,7 +22,7 @@ export async function getAnnouncements(
       title: a.title,
       postedAt: a.posted_at,
       message: stripHtml(a.message),
-      url: a.html_url,
+      url: safeUrl(a.html_url),
     };
   });
 }

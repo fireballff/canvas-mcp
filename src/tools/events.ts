@@ -1,6 +1,6 @@
 import type { CanvasClient } from "../canvas-client.js";
 import type { CalendarEventResult } from "../types.js";
-import { stripHtml } from "../utils.js";
+import { stripHtml, safeUrl } from "../utils.js";
 
 function courseIdFromContextCode(code: string): number {
   return parseInt(code.replace("course_", ""), 10);
@@ -26,7 +26,7 @@ export async function getUpcomingEvents(
         endAt: e.end_at,
         location: e.location_name,
         description: e.description ? stripHtml(e.description) : null,
-        url: e.html_url,
+        url: safeUrl(e.html_url),
       };
     });
 }

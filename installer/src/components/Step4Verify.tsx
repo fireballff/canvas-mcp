@@ -34,7 +34,7 @@ export function Step4Verify({ canvasUrl, canvasToken, selectedClients, onBack }:
       setPhase("done");
     } catch (e) {
       const raw = String(e);
-      const safe = canvasToken ? raw.replace(new RegExp(canvasToken, "g"), "[token]") : raw;
+      const safe = canvasToken ? raw.split(canvasToken).join("[token]") : raw;
       setError(safe);
       setPhase("error");
     }

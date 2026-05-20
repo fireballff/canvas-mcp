@@ -1,5 +1,5 @@
 const PRIVATE_IP_RE =
-  /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|::1$|fc|fd)/i;
+  /^(10\.|172\.(1[6-9]|2\d|3[01])\.|192\.168\.|127\.|169\.254\.|0\.0\.0\.0|::1$|fe80:|fc|fd|localhost$)/i;
 
 export function validateCanvasUrl(raw: string): string | null {
   if (!raw) return "Canvas URL cannot be empty.";
