@@ -30,14 +30,25 @@ export async function runSetup(clientArg?: string): Promise<void> {
 
   console.log("\nCanvas MCP Setup\n");
 
-  const apiUrl = await rl.question(
+  const apiUrl = (await rl.question(
     "Canvas URL (e.g. https://yourschool.instructure.com): "
-  );
-  const apiKey = await rl.question(
-    "Canvas API token (Account -> Settings -> New Access Token): "
-  );
+  )).trim();
+  if (!apiUrl || !apiUrl.startsWith("http")) {
+    rl.close();
+    console.error("Error: Canvas URL must start with http:// or https://");
+    process.exit(1);
+  }
 
-  let clientKey = clientArg;
+  const apiKey = (await rl.question(
+    "Canvas API token (Account -> Settings -> New Access Token): "
+  )).trim();
+  if (!apiKey) {
+    rl.close();
+    console.error("Error: API token cannot be empty.");
+    process.exit(1);
+  }
+
+  let clientKey = clientArg?.toLowerCase();
   if (!clientKey || !CLIENT_CONFIGS[clientKey]) {
     console.log("\nWhich AI client do you want to configure?");
     Object.entries(CLIENT_CONFIGS).forEach(([key, { description }]) => {
@@ -58,7 +69,7 @@ export async function runSetup(clientArg?: string): Promise<void> {
 
   const mcpEntry = {
     command: "npx",
-    args: ["canvas-mcp"],
+    args: ["-y", "canvas-mcp"],
     env: {
       CANVAS_API_URL: apiUrl.trim(),
       CANVAS_API_KEY: apiKey.trim(),
@@ -73,7 +84,7 @@ export async function runSetup(clientArg?: string): Promise<void> {
   );
 }
 
-function updateClientConfig(
+export function updateClientConfig(
   configPath: string,
   entry: object
 ): void {
