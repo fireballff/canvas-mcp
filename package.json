@@ -4,14 +4,16 @@
   "description": "MCP server for Canvas LMS — query assignments from Claude, ChatGPT, Gemini, and OpenRouter agents",
   "type": "module",
   "bin": {
-    "canvas-mcp": "./dist/index.js"
+    "canvas-mcp": "dist/index.js"
   },
-  "files": ["dist", "README.md"],
-  "exports": {},
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "author": "fireballff",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fireballff/canvas-mcp"
+    "url": "git+https://github.com/fireballff/canvas-mcp.git"
   },
   "scripts": {
     "build": "tsc",
@@ -19,7 +21,15 @@
     "test": "vitest run",
     "prepublishOnly": "npm run build && npm test"
   },
-  "keywords": ["mcp", "canvas", "lms", "assignments", "claude", "chatgpt", "gemini"],
+  "keywords": [
+    "mcp",
+    "canvas",
+    "lms",
+    "assignments",
+    "claude",
+    "chatgpt",
+    "gemini"
+  ],
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",
