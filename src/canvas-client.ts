@@ -2,6 +2,7 @@ import type { CanvasCourse, CanvasAssignment } from "./types.js";
 
 export class CanvasClient {
   private baseUrl: string;
+  private origin: string;
   private headers: Record<string, string>;
 
   constructor() {
@@ -15,7 +16,9 @@ export class CanvasClient {
       );
     }
 
-    this.baseUrl = `${apiUrl.replace(/\/$/, "")}/api/v1`;
+    const cleanUrl = apiUrl.replace(/\/$/, "");
+    this.baseUrl = `${cleanUrl}/api/v1`;
+    this.origin = new URL(cleanUrl).origin;
     this.headers = { Authorization: `Bearer ${apiKey}` };
   }
 
@@ -39,17 +42,23 @@ export class CanvasClient {
       const response = await fetch(nextUrl, { headers: this.headers });
 
       if (!response.ok) {
-        throw new Error(
-          `Canvas API error ${response.status}: ${await response.text()}`
-        );
+        // Do not include response body — it could echo the Authorization header
+        // on misconfigured proxies or wrong-host errors.
+        throw new Error(`Canvas API error ${response.status} ${response.statusText}`);
       }
 
       const data = (await response.json()) as T[];
       if (!Array.isArray(data)) {
-        throw new Error(`Canvas API returned unexpected response shape: ${JSON.stringify(data)}`);
+        throw new Error("Canvas API returned an unexpected response shape.");
       }
       results.push(...data);
-      nextUrl = parseLinkHeader(response.headers.get("link"));
+
+      const next = parseLinkHeader(response.headers.get("link"));
+      // Same-origin check: never follow pagination to a different host.
+      if (next && new URL(next).origin !== this.origin) {
+        throw new Error("Canvas API returned a pagination URL pointing to a different host — aborting.");
+      }
+      nextUrl = next;
     }
 
     return results;

@@ -35,9 +35,9 @@ export async function runSetup(clientArg?: string): Promise<void> {
   const apiUrl = (await rl.question(
     "Canvas URL (e.g. https://yourschool.instructure.com): "
   )).trim();
-  if (!apiUrl || !apiUrl.startsWith("http")) {
+  if (!apiUrl || !apiUrl.startsWith("https://")) {
     rl.close();
-    console.error("Error: Canvas URL must start with http:// or https://");
+    console.error("Error: Canvas URL must start with https:// (plain http is not allowed — your API token would be sent unencrypted).");
     process.exit(1);
   }
 
@@ -90,7 +90,7 @@ export function updateClientConfig(
   configPath: string,
   entry: object
 ): void {
-  mkdirSync(dirname(configPath), { recursive: true });
+  mkdirSync(dirname(configPath), { recursive: true, mode: 0o700 });
 
   let existing: Record<string, unknown> = {};
   if (existsSync(configPath)) {
@@ -108,5 +108,5 @@ export function updateClientConfig(
   mcpServers["canvas"] = entry;
   existing.mcpServers = mcpServers;
 
-  writeFileSync(configPath, JSON.stringify(existing, null, 2) + "\n");
+  writeFileSync(configPath, JSON.stringify(existing, null, 2) + "\n", { mode: 0o600 });
 }
