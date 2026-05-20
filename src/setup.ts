@@ -71,7 +71,7 @@ export async function runSetup(clientArg?: string): Promise<void> {
 
   const mcpEntry = {
     command: "npx",
-    args: ["-y", "canvas-mcp"],
+    args: ["-y", "@fireballff/canvas-mcp"],
     env: {
       CANVAS_API_URL: apiUrl.trim(),
       CANVAS_API_KEY: apiKey.trim(),

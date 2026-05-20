@@ -1,5 +1,5 @@
 {
-  "name": "canvas-mcp",
+  "name": "@fireballff/canvas-mcp",
   "version": "1.0.0",
   "description": "MCP server for Canvas LMS — query assignments from Claude, ChatGPT, Gemini, and OpenRouter agents",
   "type": "module",

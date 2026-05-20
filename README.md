@@ -10,10 +10,10 @@ Canvas → Account → Settings → **New Access Token**
 ### 2. Configure your AI client
 
 ```bash
-npx -y canvas-mcp setup --client claude      # Claude Code
-npx -y canvas-mcp setup --client chatgpt     # Cursor / OpenAI clients
-npx -y canvas-mcp setup --client gemini      # Gemini CLI
-npx -y canvas-mcp setup --client openrouter  # Cline / Open Router
+npx -y @fireballff/canvas-mcp setup --client claude      # Claude Code
+npx -y @fireballff/canvas-mcp setup --client chatgpt     # Cursor / OpenAI clients
+npx -y @fireballff/canvas-mcp setup --client gemini      # Gemini CLI
+npx -y @fireballff/canvas-mcp setup --client openrouter  # Cline / Open Router
 ```
 
 ### 3. Restart your AI client and ask away
