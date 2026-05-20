@@ -6,6 +6,13 @@
   "bin": {
     "canvas-mcp": "./dist/index.js"
   },
+  "files": ["dist", "README.md"],
+  "exports": {},
+  "author": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
