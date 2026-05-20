@@ -49,6 +49,13 @@ jobs:
             patchelf
 
       - if: matrix.language == 'rust'
+        name: Create sidecar stubs for CodeQL build
+        run: |
+          mkdir -p installer/src-tauri/resources/sidecar
+          touch installer/src-tauri/resources/sidecar/index.js
+          touch installer/src-tauri/resources/sidecar/node
+
+      - if: matrix.language == 'rust'
         name: Build Rust (for CodeQL)
         run: cargo build
         working-directory: installer/src-tauri
