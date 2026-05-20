@@ -1,0 +1,76 @@
+import type { CanvasClient } from "../canvas-client.js";
+import type { AssignmentResult } from "../types.js";
+
+export async function getAllAssignmentsDue(
+  client: CanvasClient,
+  hoursAhead: number
+): Promise<AssignmentResult[]> {
+  const now = new Date();
+  const cutoff = new Date(now.getTime() + hoursAhead * 60 * 60 * 1000);
+  const courses = await client.getCourses();
+  const results: AssignmentResult[] = [];
+
+  for (const course of courses) {
+    const assignments = await client.getAssignments(course.id);
+    for (const assignment of assignments) {
+      if (!assignment.due_at) continue;
+      const dueDate = new Date(assignment.due_at);
+      if (dueDate >= now && dueDate <= cutoff) {
+        results.push({
+          courseName: course.name,
+          courseCode: course.course_code,
+          assignmentName: assignment.name,
+          dueAt: assignment.due_at,
+          pointsPossible: assignment.points_possible,
+          url: assignment.html_url,
+        });
+      }
+    }
+  }
+
+  return results.sort(
+    (a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime()
+  );
+}
+
+export async function getCourseAssignmentsDue(
+  client: CanvasClient,
+  courseName: string,
+  hoursAhead: number
+): Promise<AssignmentResult[]> {
+  const courses = await client.getCourses();
+  const query = courseName.toLowerCase();
+
+  const course = courses.find(
+    (c) =>
+      c.name.toLowerCase().includes(query) ||
+      c.course_code.toLowerCase().includes(query)
+  );
+
+  if (!course) {
+    const available = courses.map((c) => c.name).join(", ");
+    throw new Error(
+      `Course "${courseName}" not found. Your enrolled courses: ${available}`
+    );
+  }
+
+  const now = new Date();
+  const cutoff = new Date(now.getTime() + hoursAhead * 60 * 60 * 1000);
+  const assignments = await client.getAssignments(course.id);
+
+  return assignments
+    .filter((a) => {
+      if (!a.due_at) return false;
+      const d = new Date(a.due_at);
+      return d >= now && d <= cutoff;
+    })
+    .map((a) => ({
+      courseName: course.name,
+      courseCode: course.course_code,
+      assignmentName: a.name,
+      dueAt: a.due_at!,
+      pointsPossible: a.points_possible,
+      url: a.html_url,
+    }))
+    .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime());
+}
