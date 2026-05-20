@@ -2,3 +2,16 @@ node_modules/
 generated/
 .env
 dist/
+
+# installer
+installer/node_modules/
+installer/target/
+installer/dist/
+installer/src-tauri/resources/sidecar/node
+installer/src-tauri/resources/sidecar/node.exe
+installer/src-tauri/resources/sidecar/index.js
+installer/.tmp-canvas-mcp/
+docs/superpowers/.DS_Store
+installer/.github/
+.DS_Store
+docs/.DS_Store

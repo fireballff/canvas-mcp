@@ -17,8 +17,18 @@ export class CanvasClient {
     }
 
     const cleanUrl = apiUrl.replace(/\/$/, "");
+    let parsed: URL;
+    try {
+      parsed = new URL(cleanUrl);
+    } catch {
+      throw new Error("CANVAS_API_URL is not a valid URL.");
+    }
+    if (parsed.protocol !== "https:")
+      throw new Error("CANVAS_API_URL must use https://.");
+    if (parsed.username || parsed.password)
+      throw new Error("CANVAS_API_URL must not contain credentials.");
     this.baseUrl = `${cleanUrl}/api/v1`;
-    this.origin = new URL(cleanUrl).origin;
+    this.origin = parsed.origin;
     this.headers = { Authorization: `Bearer ${apiKey}` };
   }
 
@@ -29,6 +39,9 @@ export class CanvasClient {
   }
 
   async getAssignments(courseId: number): Promise<CanvasAssignment[]> {
+    if (!Number.isInteger(courseId) || courseId <= 0) {
+      throw new Error(`Invalid course ID: ${courseId}`);
+    }
     return this.fetchAllPages<CanvasAssignment>(
       `${this.baseUrl}/courses/${courseId}/assignments?per_page=100`
     );

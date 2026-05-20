@@ -1,5 +1,29 @@
 import type { CanvasClient } from "../canvas-client.js";
-import type { AssignmentResult } from "../types.js";
+import type { AssignmentResult, CanvasCourse } from "../types.js";
+
+const SAFE_URL_SCHEMES = new Set(["https:"]);
+const CONCURRENCY = 10;
+
+function safeUrl(url: string): string {
+  try {
+    return SAFE_URL_SCHEMES.has(new URL(url).protocol) ? url : "";
+  } catch {
+    return "";
+  }
+}
+
+async function mapConcurrent<T, U>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<U>
+): Promise<U[]> {
+  const results: U[] = [];
+  for (let i = 0; i < items.length; i += limit) {
+    const batch = await Promise.all(items.slice(i, i + limit).map(fn));
+    results.push(...batch);
+  }
+  return results;
+}
 
 export async function getAllAssignmentsDue(
   client: CanvasClient,
@@ -9,8 +33,8 @@ export async function getAllAssignmentsDue(
   const cutoff = new Date(now.getTime() + hoursAhead * 60 * 60 * 1000);
   const courses = await client.getCourses();
 
-  const allAssignments = await Promise.all(
-    courses.map((course) => client.getAssignments(course.id))
+  const allAssignments = await mapConcurrent(courses, CONCURRENCY, (course) =>
+    client.getAssignments(course.id)
   );
 
   const results: AssignmentResult[] = [];
@@ -26,7 +50,7 @@ export async function getAllAssignmentsDue(
           assignmentName: assignment.name,
           dueAt: assignment.due_at,
           pointsPossible: assignment.points_possible,
-          url: assignment.html_url,
+          url: safeUrl(assignment.html_url),
         });
       }
     }
@@ -74,7 +98,7 @@ export async function getCourseAssignmentsDue(
       assignmentName: a.name,
       dueAt: a.due_at!,
       pointsPossible: a.points_possible,
-      url: a.html_url,
+      url: safeUrl(a.html_url),
     }))
     .sort((a, b) => new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime());
 }

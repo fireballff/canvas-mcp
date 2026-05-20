@@ -43,8 +43,9 @@ export async function handleToolCall(
   name: string,
   args: Record<string, unknown>
 ): Promise<{ content: Array<{ type: string; text: string }>; isError?: boolean }> {
-  const hoursAhead =
-    typeof args.hours_ahead === "number" ? args.hours_ahead : 24;
+  const raw = typeof args.hours_ahead === "number" && Number.isFinite(args.hours_ahead)
+    ? args.hours_ahead : 24;
+  const hoursAhead = Math.min(Math.max(raw, 1), 8760);
 
   try {
     const client = new CanvasClient();
