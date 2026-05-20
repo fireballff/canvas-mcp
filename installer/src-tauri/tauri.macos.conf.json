@@ -1,0 +1,7 @@
+{
+  "bundle": {
+    "resources": {
+      "resources/sidecar/node": "sidecar/node"
+    }
+  }
+}

@@ -22,8 +22,6 @@
     "active": true,
     "targets": "all",
     "resources": {
-      "resources/sidecar/node": "sidecar/node",
-      "resources/sidecar/node.exe": "sidecar/node.exe",
       "resources/sidecar/index.js": "sidecar/index.js"
     },
     "icon": [
