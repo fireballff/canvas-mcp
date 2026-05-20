@@ -26,7 +26,9 @@ const CLIENT_CONFIGS: Record<
 };
 
 export async function runSetup(clientArg?: string): Promise<void> {
-  const rl = createInterface({ input: process.stdin, output: process.stdout });
+  process.stdin.resume();
+  process.stdin.setEncoding("utf8");
+  const rl = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
 
   console.log("\nCanvas MCP Setup\n");
 
