@@ -27,12 +27,12 @@ jobs:
       - name: Build and test
         run: npm run build && npm test
 
-      - name: Get OIDC publish token
-        run: |
-          token=$(curl -fsSL \
-            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=npm" | jq -r '.value')
-          echo "NODE_AUTH_TOKEN=$token" >> "$GITHUB_ENV"
+      - name: Verify npm auth (OIDC)
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: oidc
 
       - name: Publish to npm
         run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: oidc
