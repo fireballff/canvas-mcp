@@ -1,16 +1,8 @@
 import type { CanvasClient } from "../canvas-client.js";
-import type { AssignmentResult, CanvasCourse } from "../types.js";
+import type { AssignmentResult } from "../types.js";
+import { safeUrl } from "../utils.js";
 
-const SAFE_URL_SCHEMES = new Set(["https:"]);
 const CONCURRENCY = 10;
-
-function safeUrl(url: string): string {
-  try {
-    return SAFE_URL_SCHEMES.has(new URL(url).protocol) ? url : "";
-  } catch {
-    return "";
-  }
-}
 
 async function mapConcurrent<T, U>(
   items: T[],

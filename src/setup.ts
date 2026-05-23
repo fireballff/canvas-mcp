@@ -61,13 +61,12 @@ export async function runSetup(clientArg?: string): Promise<void> {
     process.exit(1);
   }
 
-  const apiKey = (await rl.question(
-    "Canvas API token (Account -> Settings -> New Access Token): "
-  )).trim();
-  if (!apiKey) {
-    rl.close();
-    console.error("Error: API token cannot be empty.");
-    process.exit(1);
+  let apiKey = "";
+  while (!apiKey) {
+    apiKey = (await rl.question(
+      "Canvas API token (Account -> Settings -> New Access Token): "
+    )).trim();
+    if (!apiKey) console.error("Token cannot be empty — please paste your token and press Enter.");
   }
 
   let clientKey = clientArg?.toLowerCase();
