@@ -27,12 +27,10 @@ jobs:
       - name: Build and test
         run: npm run build && npm test
 
-      - name: Verify npm auth (OIDC)
-        run: npm whoami
-        env:
-          NODE_AUTH_TOKEN: oidc
+      - name: Authenticate to npm via OIDC
+        uses: npm/cli-action@v2
+        with:
+          token: oidc
 
       - name: Publish to npm
         run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: oidc
